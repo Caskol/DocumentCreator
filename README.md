@@ -1,7 +1,7 @@
 Parser for .docx files. Changes pre-added keywords in .docx file to user's data. Write data in JavaFX Window to change all of them.
 Use this keywords to do magic:
-{PASSPORTNUM} - writes full RU passport number data (serie+number) into new .docx file\n
-{PASSPORTSERIE} - writes RU passport serie\n
+<br>{PASSPORTNUM} - writes full RU passport number data (serie+number) into new .docx file</br>
+{PASSPORTSERIE} - writes RU passport serie
 {PASSPORTNOMER} - writes RU passport number 
 {LASTNAME} - writes last name of person
 {FIRSTNAME} - writes first name of person
