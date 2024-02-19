@@ -200,7 +200,7 @@ public class MainWindowController {
         personalData.put("{SUMNUM}", costField.getText());
         personalData.put("{SUMFULL}", costFullField.getText());
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         List<Future<Void>> futureList = Collections.synchronizedList(new ArrayList<>());
         for (int i=1;;i++) {
             final int index = i;
