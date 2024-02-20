@@ -2,7 +2,6 @@ package com.example.documentcreator;
 
 
 import de.phip1611.Docx4JSRUtil;
-import javafx.scene.control.Alert;
 import org.docx4j.Docx4J;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
@@ -10,7 +9,6 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
