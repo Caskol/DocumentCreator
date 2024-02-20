@@ -58,7 +58,7 @@ public final class DocumentUtils {
             WordprocessingMLPackage doc = WordprocessingMLPackage.load(fis);
             Docx4JSRUtil.searchAndReplace(doc, data);
             // Сохранение изменений
-            Docx4J.save(doc, new File("CreatedFrom" + docPath.getFileName()));
+            Docx4J.save(doc, new File("CopyOf" + docPath.getFileName()));
             return null;
         } catch (IOException e) {
             throw new IOException("Произошла ошибка при попытке чтения файла " + docPath);

@@ -8,11 +8,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class MainWindowController {
     @FXML
@@ -202,17 +204,26 @@ public class MainWindowController {
 
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         List<Future<Void>> futureList = Collections.synchronizedList(new ArrayList<>());
-        for (int i=1;;i++) {
-            final int index = i;
-            File f = new File("template" + i + ".docx");
 
-            if (f.exists())
-            {
-                Callable<Void> task = ()-> DocumentUtils.parseDoc(personalData, Paths.get("template" + index + ".docx"));
-                futureList.add(executorService.submit(task));
-            }
-            else
-                break;
+        Set<Path> files; //здесь будут храниться все пути к .docx файлам
+        try {
+            files = Files.list(Paths.get(""))
+                    .filter(path->
+                    {
+                        return path.getFileName().toString().endsWith(".docx") && !path.getFileName().toString().startsWith("CopyOf");
+                    })
+                    .collect(Collectors.toSet());
+        } catch (IOException e) {
+            throwAlert(Alert.AlertType.ERROR,
+                    "Ошибка",
+                    "",
+                    "Не удалось получить список .docx файлов в корневой папке. Может быть, ошибка поможет: "+ e);
+            return;
+        }
+        for (Path docs : files)
+        {
+            Callable<Void> task = ()-> DocumentUtils.parseDoc(personalData, docs);
+            futureList.add(executorService.submit(task));
         }
         executorService.shutdown();
         try {
@@ -220,8 +231,10 @@ public class MainWindowController {
                 executorService.shutdownNow();
             }
         } catch (InterruptedException ex) {
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
+            throwAlert(Alert.AlertType.ERROR,
+                    "Ошибка",
+                    "Процесс был прерван",
+                    "Был прерван процесс "+ ex);
         }
         for (Future future : futureList)
         {
@@ -231,39 +244,40 @@ public class MainWindowController {
                 Throwable info = e.getCause();
                 if (info instanceof IOException)
                 {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-
-                    alert.setTitle("Ошибка");
-                    alert.setContentText("Произошла ошибка ввода-вывода: " + info);
-
-                    alert.showAndWait();
+                    throwAlert(Alert.AlertType.ERROR,
+                            "Ошибка",
+                            "",
+                            "Произошла ошибка ввода-вывода: " + info);
                 }
                 else if (info instanceof Docx4JException)
                 {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-
-                    alert.setTitle("Ошибка");
-                    alert.setHeaderText(null);
-                    alert.setContentText(info.toString());
-
-                    alert.showAndWait();
+                    throwAlert(Alert.AlertType.ERROR,
+                            "Ошибка",
+                            "",
+                            info.toString());
                 }
                 else
                 {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-
-                    alert.setTitle("Ошибка");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Произошла необрабатываемая ошибка:" + info);
-
-                    alert.showAndWait();
+                    throwAlert(Alert.AlertType.ERROR,
+                            "Ошибка",
+                            "",
+                            "Произошла необрабатываемая ошибка: "+info);
                 }
             }
         }
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Работа выполнена!");
-        alert.setHeaderText("Работа выполнена");
-        alert.setContentText("Обязательно проверьте документ(ы)!");
+        throwAlert(Alert.AlertType.INFORMATION,
+                "Работа выполнена",
+                "Работа выполнена",
+                "Обязательно проверьте документы");
+    }
+    private void throwAlert(Alert.AlertType alertType,String title, String headerText,String contentText)
+    {
+        Alert alert = new Alert(alertType);
+
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+
         alert.showAndWait();
     }
 }
