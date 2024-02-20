@@ -2,13 +2,18 @@ package com.example.documentcreator;
 
 
 import de.phip1611.Docx4JSRUtil;
+import javafx.scene.control.Alert;
 import org.docx4j.Docx4J;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public final class DocumentUtils {
@@ -65,5 +70,13 @@ public final class DocumentUtils {
         } catch (Docx4JException e){
             throw new Docx4JException("Произошла внутренняя ошибка библиотеки Docx4J для документа "+ docPath.getFileName()+". Ошибка: "+e);
         }
+    }
+    public static Set<Path> getDocxInDirectory (Path dir) throws IOException {
+        return Files.list(dir)
+                .filter(path->
+                {
+                    return path.getFileName().toString().endsWith(".docx") && !path.getFileName().toString().startsWith("CopyOf");
+                })
+                .collect(Collectors.toSet());
     }
 }
