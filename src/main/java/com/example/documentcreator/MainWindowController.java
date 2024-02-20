@@ -207,12 +207,7 @@ public class MainWindowController {
 
         Set<Path> files; //здесь будут храниться все пути к .docx файлам
         try {
-            files = Files.list(Paths.get(""))
-                    .filter(path->
-                    {
-                        return path.getFileName().toString().endsWith(".docx") && !path.getFileName().toString().startsWith("CopyOf");
-                    })
-                    .collect(Collectors.toSet());
+            files = DocumentUtils.getDocxInDirectory(Paths.get(""));
         } catch (IOException e) {
             throwAlert(Alert.AlertType.ERROR,
                     "Ошибка",
