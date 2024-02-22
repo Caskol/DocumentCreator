@@ -289,11 +289,8 @@ public class MainWindowController {
     }
     private static Set<Path> getDocxInDirectory (Path dir) throws IOException {
         return Files.list(dir)
-                .filter(path->
-                {
-                    return path.getFileName().toString().endsWith(".docx") &&
-                            (path.getFileName().toString().contains("{LASTNAME}") || path.getFileName().toString().contains("{FIRSTNAME}"));
-                })
+                .filter(path-> path.getFileName().toString().endsWith(".docx") &&
+                        (path.getFileName().toString().contains("{LASTNAME}") || path.getFileName().toString().contains("{FIRSTNAME}")))
                 .collect(Collectors.toSet());
     }
 }
