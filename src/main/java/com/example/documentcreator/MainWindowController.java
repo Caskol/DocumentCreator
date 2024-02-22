@@ -202,12 +202,9 @@ public class MainWindowController {
         personalData.put("{SUMNUM}", costField.getText());
         personalData.put("{SUMFULL}", costFullField.getText());
 
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        List<Future<Void>> futureList = Collections.synchronizedList(new ArrayList<>());
-
         Set<Path> files; //здесь будут храниться все пути к .docx файлам
         try {
-            files = DocumentUtils.getDocxInDirectory(Paths.get(""));
+            files = getDocxInDirectory(Paths.get(""));
         } catch (IOException e) {
             throwAlert(Alert.AlertType.ERROR,
                     "Ошибка",
@@ -215,12 +212,24 @@ public class MainWindowController {
                     "Не удалось получить список .docx файлов в корневой папке. Может быть, ошибка поможет: "+ e);
             return;
         }
+        if (files.isEmpty())
+        {
+            throwAlert(Alert.AlertType.WARNING,
+                    "Не удалось обнаружить подходящих файлов",
+                    "Кажется, что Вы не добавили файлы шаблонов в папку проекта",
+                    "Либо сделали это неверно. В названии файла должно быть указано, как минимум одно ключевое слово - фамилия {LASTNAME} или имя {FIRSTNAME}.");
+            return;
+        }
+
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Future<Void>> futureList = Collections.synchronizedList(new ArrayList<>());
         for (Path docs : files)
         {
             Callable<Void> task = ()-> DocumentUtils.parseDoc(personalData, docs);
             futureList.add(executorService.submit(task));
         }
         executorService.shutdown();
+
         try {
             if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
                 executorService.shutdownNow();
@@ -231,10 +240,13 @@ public class MainWindowController {
                     "Процесс был прерван",
                     "Был прерван процесс "+ ex);
         }
+
+        int countFiles = 0;
         for (Future future : futureList)
         {
             try {
                 future.get();
+                countFiles++;
             } catch (InterruptedException | ExecutionException | CancellationException e) {
                 Throwable info = e.getCause();
                 if (info instanceof IOException)
@@ -256,14 +268,14 @@ public class MainWindowController {
                     throwAlert(Alert.AlertType.ERROR,
                             "Ошибка",
                             "",
-                            "Произошла необрабатываемая ошибка: "+info);
+                            "Произошла необрабатываемая ошибка: " + info);
                 }
             }
         }
         throwAlert(Alert.AlertType.INFORMATION,
                 "Работа выполнена",
                 "Работа выполнена",
-                "Обязательно проверьте документы");
+                "Было создано "+ countFiles+" файлов");
     }
     private void throwAlert(Alert.AlertType alertType,String title, String headerText,String contentText)
     {
@@ -274,5 +286,14 @@ public class MainWindowController {
         alert.setContentText(contentText);
 
         alert.showAndWait();
+    }
+    private static Set<Path> getDocxInDirectory (Path dir) throws IOException {
+        return Files.list(dir)
+                .filter(path->
+                {
+                    return path.getFileName().toString().endsWith(".docx") &&
+                            (path.getFileName().toString().contains("{LASTNAME}") || path.getFileName().toString().contains("{FIRSTNAME}"));
+                })
+                .collect(Collectors.toSet());
     }
 }

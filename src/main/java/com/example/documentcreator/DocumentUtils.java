@@ -1,17 +1,13 @@
 package com.example.documentcreator;
 
-
 import de.phip1611.Docx4JSRUtil;
 import org.docx4j.Docx4J;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 public final class DocumentUtils {
@@ -61,7 +57,7 @@ public final class DocumentUtils {
             WordprocessingMLPackage doc = WordprocessingMLPackage.load(fis);
             Docx4JSRUtil.searchAndReplace(doc, data);
             // Сохранение изменений
-            Docx4J.save(doc, new File("CopyOf" + docPath.getFileName()));
+            Docx4J.save(doc, new File(createDocxName(data,docPath.getFileName().toString())));
             return null;
         } catch (IOException e) {
             throw new IOException("Произошла ошибка при попытке чтения файла " + docPath);
@@ -69,12 +65,15 @@ public final class DocumentUtils {
             throw new Docx4JException("Произошла внутренняя ошибка библиотеки Docx4J для документа "+ docPath.getFileName()+". Ошибка: "+e);
         }
     }
-    public static Set<Path> getDocxInDirectory (Path dir) throws IOException {
-        return Files.list(dir)
-                .filter(path->
-                {
-                    return path.getFileName().toString().endsWith(".docx") && !path.getFileName().toString().startsWith("CopyOf");
-                })
-                .collect(Collectors.toSet());
+    public static String createDocxName(Map<String,String> data, String previousFileName)
+    {
+        String fileName = previousFileName;
+        for (String key : data.keySet())
+        {
+            if (fileName.contains(key))
+                fileName = fileName.replace(key,data.get(key));
+        }
+        return fileName;
     }
+
 }
