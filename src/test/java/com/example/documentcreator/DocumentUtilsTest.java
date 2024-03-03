@@ -1,4 +1,4 @@
-
+package com.example.documentcreator;
 import com.example.documentcreator.DocumentUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.junit.Assert;
