@@ -11,7 +11,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.documentcreator.MainWindowController">
    <children>
-      <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox fx:id="mainHBox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Separator orientation="VERTICAL" prefHeight="200.0" />
             <VBox spacing="5.0" HBox.hgrow="ALWAYS">
@@ -65,11 +65,6 @@
                   </Label>
                   <TextField fx:id="birthplaceField" promptText="Место рождения" />
                   <Separator prefWidth="200.0" />
-               </children>
-            </VBox>
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <VBox spacing="5.0">
-               <children>
                   <Label text="Кем выдан паспорт РФ" textAlignment="CENTER">
                      <font>
                         <Font size="16.0" />
@@ -77,6 +72,11 @@
                   </Label>
                   <TextField fx:id="passportGivenPlaceField" promptText="Кем выдан паспорт РФ" />
                   <Separator prefWidth="200.0" />
+               </children>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
+            <VBox spacing="5.0">
+               <children>
                   <Label text="Дата выдачи паспорта" textAlignment="CENTER">
                      <font>
                         <Font size="16.0" />
@@ -119,11 +119,6 @@
                   </Label>
                   <TextField fx:id="buildingField" promptText="Строение" />
                   <Separator prefWidth="200.0" />
-               </children>
-            </VBox>
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <VBox spacing="5.0">
-               <children>
                   <Label text="Корпус" textAlignment="CENTER">
                      <font>
                         <Font size="16.0" />
@@ -138,6 +133,11 @@
                   </Label>
                   <TextField fx:id="apartmentField" promptText="Квартира" />
                   <Separator prefWidth="200.0" />
+               </children>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
+            <VBox spacing="5.0">
+               <children>
                   <Label text="Дом/корпус/квартира" textAlignment="CENTER">
                      <font>
                         <Font size="16.0" />
@@ -159,13 +159,6 @@
                   </Label>
                   <TextField fx:id="countryPassportField" promptText="Номер з. паспорта" />
                   <Separator prefWidth="200.0" />
-                  <Label text="Имя латиницей" textAlignment="CENTER">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="firstnameLatinField" promptText="Имя латиницей" />
-                  <Separator prefWidth="200.0" />
                   <Label text="Фамилия латиницей" textAlignment="CENTER">
                      <font>
                         <Font size="16.0" />
@@ -173,11 +166,13 @@
                   </Label>
                   <TextField fx:id="lastnameLatinField" promptText="Фамилия латиницей" />
                   <Separator prefWidth="200.0" />
-               </children>
-            </VBox>
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <VBox spacing="5.0">
-               <children>
+                  <Label text="Имя латиницей" textAlignment="CENTER">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="firstnameLatinField" promptText="Имя латиницей" />
+                  <Separator prefWidth="200.0" />
                   <Label text="Дата выдачи з. паспорта" textAlignment="CENTER">
                      <font>
                         <Font size="16.0" />
@@ -199,6 +194,11 @@
                   </Label>
                   <TextField fx:id="countryPassportGivenPlaceField" promptText="Кем выдан з. паспорт" />
                   <Separator prefWidth="200.0" />
+               </children>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
+            <VBox spacing="5.0">
+               <children>
                   <Label text="ИНН" textAlignment="CENTER">
                      <font>
                         <Font size="16.0" />
@@ -227,11 +227,6 @@
                   </Label>
                   <TextField fx:id="worksphereField" promptText="Сфера деятельности" />
                   <Separator prefWidth="200.0" />
-               </children>
-            </VBox>
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <VBox spacing="5.0">
-               <children>
                   <Label text="Кодовое слово" textAlignment="CENTER">
                      <font>
                         <Font size="16.0" />
@@ -260,6 +255,11 @@
                   </Label>
                   <TextField fx:id="emailField" promptText="Email" />
                   <Separator prefWidth="200.0" />
+               </children>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
+            <VBox spacing="5.0">
+               <children>
                   <Label text="Дата составления" textAlignment="CENTER">
                      <font>
                         <Font size="16.0" />

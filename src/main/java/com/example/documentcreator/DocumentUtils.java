@@ -7,6 +7,7 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -48,6 +49,50 @@ public final class DocumentUtils {
                 return "ноября";
             case "12":
                 return "декабря";
+            default:
+                return "";
+        }
+    }
+    public static String getMonthNumerical(String monthName)
+    {
+        switch (monthName.toLowerCase(Locale.ROOT))
+        {
+            case "января":
+            case "январь":
+                return "01";
+            case "февраль":
+            case "февраля":
+                return "02";
+            case "марта":
+            case "март":
+                return "03";
+            case "апреля":
+            case "апрель":
+                return "04";
+            case "мая":
+            case "май":
+                return "05";
+            case "июня":
+            case "июнь":
+                return "06";
+            case "июля":
+            case "июль":
+                return "07";
+            case "августа":
+            case "август":
+                return "08";
+            case "сентября":
+            case "сентябрь":
+                return "09";
+            case "октября":
+            case "октябрь":
+                return "10";
+            case "ноября":
+            case "ноябрь":
+                return "11";
+            case "декабря":
+            case "декабрь":
+                return "12";
             default:
                 return "";
         }

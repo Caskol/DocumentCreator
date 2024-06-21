@@ -6,7 +6,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,6 +35,9 @@ public class MainWindowController {
 
     @FXML
     private Button buttonClear;
+
+    @FXML
+    private HBox mainHBox;
 
     @FXML
     private Button buttonRun;
@@ -129,6 +136,9 @@ public class MainWindowController {
     private TextField worksphereField;
 
     @FXML
+    private TextField monthToNumerical;
+
+    @FXML
     void clearFields(ActionEvent event) {
         for (Node node : ((Node)event.getSource()).getScene().getRoot().lookupAll(".text-field"))
         {
@@ -199,6 +209,8 @@ public class MainWindowController {
         personalData.put("{DEALCREATIONDAY}", (dealCreationDateField.getText().length()==10) ? dealCreationDateField.getText().substring(0,2) : "");
         personalData.put("{DEALCREATIONMONTH}", (dealCreationDateField.getText().length()==10) ? DocumentUtils.getMonthName(dealCreationDateField.getText().substring(3,5)) : "");
         personalData.put("{DEALCREATIONYEAR}", (dealCreationDateField.getText().length()==10) ? dealCreationDateField.getText().substring(6,10) : "");
+        personalData.put("{DEALCREATIONMONTHNUMERICAL}", (dealCreationDateField.getText().length()==10) ?
+                dealCreationDateField.getText().substring(3,5): "");
         personalData.put("{SUMNUM}", costField.getText());
         personalData.put("{SUMFULL}", costFullField.getText());
 
@@ -289,8 +301,47 @@ public class MainWindowController {
     }
     private static Set<Path> getDocxInDirectory (Path dir) throws IOException {
         return Files.list(dir)
-                .filter(path-> path.getFileName().toString().endsWith(".docx") &&
-                        (path.getFileName().toString().contains("{LASTNAME}") || path.getFileName().toString().contains("{FIRSTNAME}")))
+                .filter(path-> path.getFileName().toString().endsWith(".docx"))
                 .collect(Collectors.toSet());
+    }
+
+    @FXML
+    public void initialize() {
+        setFocusTraversal(mainHBox);
+    }
+
+    private void setFocusTraversal(HBox hbox) {
+        List<TextField> textFields = new ArrayList<TextField>();
+        for (Node vbox : hbox.getChildren())
+        {
+            if (vbox instanceof VBox) {
+                for (Node textField : ((VBox) vbox).getChildren()){
+                    if (textField instanceof TextField) {
+                        textFields.add((TextField)textField);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < textFields.size(); i++) {
+            final int index = i;
+            textFields.get(i).setOnKeyPressed(event -> handleKeyPressed(event, textFields,index));
+        }
+    }
+
+    private void handleKeyPressed(KeyEvent event, List<TextField> textFields, int index) {
+        switch (event.getCode()) {
+            case UP:
+                if (index > 0) {
+                    textFields.get(index - 1).requestFocus();
+                }
+                break;
+            case DOWN:
+                if (index < textFields.size() - 1) {
+                    textFields.get(index + 1).requestFocus();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
