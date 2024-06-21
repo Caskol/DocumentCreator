@@ -54,4 +54,4 @@ Use these keywords to do magic:
 <br>{DEALCREATIONYEAR} - year where deal was created</br>
 <br>{SUMNUM} - cost of deal</br>
 <br>{SUMFULL} - full cost of deal</br>
-<br>{DEALCREATIONMONTHNUMERICAL} - return month name from numerical type from deal creation date field (май - 05)</br>
+<br>{DEALCREATIONMONTHNUMERICAL} - return month numerical from deal creation date field</br>
